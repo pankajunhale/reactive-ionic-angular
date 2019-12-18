@@ -1,0 +1,5 @@
+// mock json data generator
+https://mockaroo.com/
+// micro-front end
+https://github.com/gilsdav/angular-micro-frontend-sample 
+https://github.com/chriskitson/micro-frontends-with-web-components 

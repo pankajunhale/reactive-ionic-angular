@@ -1,0 +1,11 @@
+<ion-list>
+  <ng-container *ngIf="myDomainList$ | async as domain">
+    <ion-item *ngFor="let item of domain">
+      <ion-label>{{item.Name}}</ion-label>
+      <ion-checkbox color="dark"       
+      slot="end"
+      (ngModelChange)="doSearchByDomain($event,item);"
+      [(ngModel)]="item.IsChecked"></ion-checkbox>
+    </ion-item>
+  </ng-container>
+</ion-list>

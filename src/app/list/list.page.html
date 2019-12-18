@@ -4,20 +4,79 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      List
+      List      
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+    <!-- <ng-container *ngIf="employeeListResult$ | async as employee">
+        {{employee | json}}
+    </ng-container> -->
   <ion-list>
-    <ion-item *ngFor="let item of items">
-      <ion-icon [name]="item.icon" slot="start"></ion-icon>
-      {{item.title}}
-      <div class="item-note" slot="end">
-        {{item.note}}
-      </div>
-    </ion-item>
+      <ion-item>
+        
+        <ion-button [attr.disabled]="isFirstPage$ | async"  (click)="previous(-1);" color="tertiary">Previous</ion-button>
+        <ion-label slot="end"> <strong> Page: {{ userPage$ | async}} of {{ totalPages$ | async}} </strong></ion-label> 
+        <ion-label slot="end"><strong>Total Records: {{ totalResult$ | async}}</strong></ion-label>
+        <ion-button [attr.disabled]="isLastPage$ | async" (click)="next(1);" slot="end" color="tertiary">Next</ion-button>
+      </ion-item>
+      <ion-item>
+          <ion-searchbar 
+          [ngModel]="searchTerm$ | async" 
+          (ngModelChange)="doSearch($event);"
+          placeholder="Filter By Name" 
+          showCancelButton="focus"></ion-searchbar>
+      </ion-item>
+      <ion-item>
+            <ion-radio-group  [ngModel]="$gender" (ngModelChange)="doSearchByGnder($event);">
+                <ion-row >
+                    <ion-col>
+                      <ion-item no-lines>
+                        Gender:
+                      </ion-item>
+                    </ion-col>
+                    <ion-col>
+                      <ion-item no-lines>
+                        <ion-label>Male</ion-label>
+                        <ion-radio value="Male"></ion-radio>
+                      </ion-item>
+                    </ion-col>
+                    <ion-col>
+                      <ion-item no-lines>
+                       <ion-label>Female</ion-label>
+                        <ion-radio value="Female"></ion-radio>
+                      </ion-item>
+                    </ion-col>
+                  </ion-row>
+                </ion-radio-group>
+      </ion-item>
+      <ng-container *ngIf="employeeListResult$ | async as employee">
+          <ion-row>
+              <ion-col size="3" style="background-color: #f1f3f6;">
+                <app-advance-filter></app-advance-filter>
+              </ion-col>
+              <ion-col size="9">
+                <ion-list>
+                  <ion-item *ngFor="let item of employee">
+                      <ion-badge slot="start" [attr.color]="item.GenderColor">{{item.GenderBadge}}</ion-badge>
+                      <ion-label>{{item.Name}}</ion-label>
+                      <div class="item-note" slot="end">
+                        {{item.EmailId}}
+                      </div>        
+                    </ion-item>
+                    <ion-item>
+        
+                      <ion-button [attr.disabled]="isFirstPage$ | async"  (click)="previous(-1);" color="tertiary">Previous</ion-button>
+                      <ion-label slot="end"> <strong> Page: {{ userPage$ | async}} of {{ totalPages$ | async}} </strong></ion-label> 
+                      <ion-label slot="end"><strong>Total Records: {{ totalResult$ | async}}</strong></ion-label>
+                      <ion-button [attr.disabled]="isLastPage$ | async" (click)="next(1);" slot="end" color="tertiary">Next</ion-button>
+                    </ion-item>
+                </ion-list>   
+                </ion-col>
+            </ion-row>
+        
+        </ng-container>   
   </ion-list>
   <!--
     <div *ngIf="selectedItem" padding>

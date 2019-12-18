@@ -1,39 +1,44 @@
 import { Component, OnInit } from '@angular/core';
-
+import { EmployeeService } from '../services/employee.service';
+import { map } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
 @Component({
   selector: 'app-list',
   templateUrl: 'list.page.html',
   styleUrls: ['list.page.scss']
 })
 export class ListPage implements OnInit {
-  private selectedItem: any;
-  private icons = [
-    'flask',
-    'wifi',
-    'beer',
-    'football',
-    'basketball',
-    'paper-plane',
-    'american-football',
-    'boat',
-    'bluetooth',
-    'build'
-  ];
-  public items: Array<{ title: string; note: string; icon: string }> = [];
-  constructor() {
-    for (let i = 1; i < 11; i++) {
-      this.items.push({
-        title: 'Item ' + i,
-        note: 'This is item #' + i,
-        icon: this.icons[Math.floor(Math.random() * this.icons.length)]
-      });
-    }
+
+  public searchTerm$ = this._employeeService.searchEmployee$;
+  public employeeListResult$ = this._employeeService.employeeResult$;
+  public pageOffset$ = this._employeeService.pageOffset$;
+  public totalResult$ = this._employeeService.totalResult$;
+  public isFirstPage$ = this._employeeService.pageOffset$.pipe(map(page => page === 0))
+  public totalPages$ = this._employeeService.totalPages$;
+  public userPage$ = this._employeeService.pageOffset$.pipe(map(page => page + 1));
+  public gender$ = this._employeeService.gender$;
+  public isLastPage$ = combineLatest(this.userPage$,this.totalPages$).pipe(
+    map(([currrentPage,totalPages])=>{
+      return currrentPage === totalPages;
+    })
+  );
+
+  constructor(private _employeeService:EmployeeService) {    
   }
 
   ngOnInit() {
   }
-  // add back when alpha.4 is out
-  // navigate(item) {
-  //   this.router.navigate(['/list', JSON.stringify(item)]);
-  // }
+  // only set value obsevable 
+  public next(num){
+    this._employeeService.setPageOffset(num);
+  }
+  public previous(num){
+    this._employeeService.setPageOffset(num);
+  }
+  public doSearch(data){
+    this._employeeService.setSearch(data);
+  }
+  public doSearchByGnder(data){
+    this._employeeService.setGender(data);
+  } 
 }
